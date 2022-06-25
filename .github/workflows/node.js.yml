@@ -33,5 +33,5 @@ jobs:
       with:
           name: artifact
           path: |
-            public/
+            dist/
       
