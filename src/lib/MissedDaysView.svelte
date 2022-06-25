@@ -77,7 +77,11 @@
             {#each yearlyData.students as student}
                 {@const isoDate = DateUtils.getISOForDay(currentWeekDate, dayOfWeek)}
                 {@const missedEntry = student.missedTimes.get(isoDate)}
-                <td on:click={()=>handleClick(student, isoDate)}>{missedEntry?.type}</td>
+                <td on:click={()=>handleClick(student, isoDate)} on:contextmenu|preventDefault={()=>console.log("Hui")}
+                    class:excused={missedEntry.type===MissedType.EXCUSED}
+                    class:unexcused={missedEntry.type===MissedType.UNEXCUSED}
+                    class="day"
+                >{missedEntry?.type}</td>
             {/each}
         </tr>
     {/each}
@@ -87,5 +91,11 @@
         display: flex;
         align-items: center;
         gap: 1em;
+    }
+    .excused {
+        background-color: aqua;
+    }
+    .unexcused {
+        background-color: #ff3e00;
     }
 </style>
