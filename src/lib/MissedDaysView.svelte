@@ -33,7 +33,7 @@
             student.missedTimes.set(isoDate, {
                 date: new Date(isoDate),
                 type: MissedType.EXCUSED,
-                hours: 6
+                hours: 0
             });
             yearlyData.students = yearlyData.students;
             return;
@@ -47,6 +47,15 @@
         }
         yearlyData.students = yearlyData.students;
 
+    };
+
+    const handleRightClick = (student: StudentModel, isoDate: string)=> {
+        if(!student.missedTimes.get(isoDate)) {
+            return;
+        }
+        const missedInfo = student.missedTimes.get(isoDate);
+        missedInfo.hours = ((missedInfo.hours + 1) % 6);
+        yearlyData.students = yearlyData.students;
     };
 </script>
 <div class="header">
@@ -77,14 +86,21 @@
             {#each yearlyData.students as student}
                 {@const isoDate = DateUtils.getISOForDay(currentWeekDate, dayOfWeek)}
                 {@const missedEntry = student.missedTimes.get(isoDate)}
-                <td on:click={()=>handleClick(student, isoDate)} on:contextmenu|preventDefault={()=>console.log("Hui")}
-                    class:excused={missedEntry.type===MissedType.EXCUSED}
-                    class:unexcused={missedEntry.type===MissedType.UNEXCUSED}
+                <td on:click={()=>handleClick(student, isoDate)} on:contextmenu|preventDefault={()=>handleRightClick(student, isoDate)}
+                    class:excused={missedEntry?.type===MissedType.EXCUSED}
+                    class:unexcused={missedEntry?.type===MissedType.UNEXCUSED}
                     class="day"
-                >{missedEntry?.type}</td>
+                >{missedEntry ? missedEntry?.hours === 0 ? "" : missedEntry?.hours : ""}</td>
             {/each}
         </tr>
     {/each}
+    <tr></tr>
+    <tr>
+        <td class="excused"></td>
+        <td>Entschuldigt</td>
+        <td class="unexcused"></td>
+        <td>Untentschuldigt</td>
+    </tr>
 </table>
 <style>
     .header {
