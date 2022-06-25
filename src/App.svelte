@@ -1,65 +1,32 @@
 <script lang="ts">
-  import logo from './assets/svelte.png'
-  import Counter from './lib/Counter.svelte'
+    import logo from './assets/svelte.png'
+    import Counter from './lib/Counter.svelte'
+    import {Button, SvelteUIProvider, Switch} from "@svelteuidev/core";
+    import {writable} from "svelte/store";
+    import ThemeIcon from 'svelte-material-icons/ThemeLightDark.svelte'
+    import YearDataInput from "./lib/YearDataInput.svelte";
+    import MissedDaysView from "./lib/MissedDaysView.svelte";
+
+
+    let darkMode = writable(JSON.parse(localStorage.getItem("darkMode")));
+    darkMode.subscribe((value) => localStorage.setItem("darkMode", value));
+
+    let displayMode: 'year-data' | 'missed-days' = 'year-data';
+
 </script>
+<SvelteUIProvider withGlobalStyles themeObserver={$darkMode ? 'dark' : 'light'}>
+    <main>
+        <Switch bind:checked="{$darkMode}" label="Dark Mode"></Switch>
 
-<main>
-  <img src={logo} alt="Svelte Logo" />
-  <h1>Hello Typescript!</h1>
+        {#if displayMode === "year-data"}
+            <YearDataInput></YearDataInput>
+            <Button on:click={()=>displayMode='missed-days'}>Weiter zur Fehlzeitenansicht</Button>
+        {:else if displayMode === "missed-days"}
+            <MissedDaysView></MissedDaysView>
+            <Button on:click={()=>displayMode='year-data'}>Zurück zur Basisdatenansicht</Button>
+        {/if}
+    </main>
 
-  <Counter />
-
-  <p>
-    Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte
-    apps.
-  </p>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme">SvelteKit</a> for
-    the officially supported framework, also powered by Vite!
-  </p>
-</main>
-
-<style>
-  :root {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
-
-  main {
-    text-align: center;
-    padding: 1em;
-    margin: 0 auto;
-  }
-
-  img {
-    height: 16rem;
-    width: 16rem;
-  }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4rem;
-    font-weight: 100;
-    line-height: 1.1;
-    margin: 2rem auto;
-    max-width: 14rem;
-  }
-
-  p {
-    max-width: 14rem;
-    margin: 1rem auto;
-    line-height: 1.35;
-  }
-
-  @media (min-width: 480px) {
-    h1 {
-      max-width: none;
-    }
-
-    p {
-      max-width: none;
-    }
-  }
-</style>
+    <style>
+    </style>
+</SvelteUIProvider>
