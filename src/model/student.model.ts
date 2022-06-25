@@ -38,4 +38,25 @@ export class StudentModel implements StudentProperties {
         );
     }
 
+    public getMissedDays(): number {
+        return this.getMissedDaysAndHours()[0];
+    }
+
+    public getMissedDaysAndHours(): [number, number] {
+        let days = 0;
+        let hours = 0;
+        this.missedTimes.forEach((value, key)=> {
+            if(value.hours === 0) {
+                days += 1;
+            } else {
+                hours += value.hours;
+            }
+            if(hours >= 6) {
+                days += 1;
+                hours -= 6;
+            }
+        });
+        return [days, hours];
+    }
+
 }

@@ -60,6 +60,7 @@
 </script>
 <div class="header">
     <h2>Woche von: {dateFormatter.format(firstDay)}  bis: {dateFormatter.format(lastDay)}</h2>
+    <span class="buttons">
     <ActionIcon disabled={isFirstWeek} title="Erste Woche" on:click={()=>currentWeekDate=new Date(yearlyData.schoolYear.startDate)}>
         <ArrowFirst color={$darkModeEnabled ? 'white' : 'black'} size="2em"></ArrowFirst>
     </ActionIcon>
@@ -72,12 +73,13 @@
     <ActionIcon disabled={isLastWeek} title="Woche vor" on:click={()=>currentWeekDate=new Date(yearlyData.schoolYear.endDate)}>
         <ArrowLast color={$darkModeEnabled ? 'white' : 'black'} size="2em"></ArrowLast>
     </ActionIcon>
+    </span>
 </div>
 <table>
     <tr>
         <td></td>
         {#each yearlyData.students as student}
-            <th>{student.name}, {student.firstName}</th>
+            <th title={student?.getMissedDaysAndHours()}>{student.name}, {student.firstName}</th>
         {/each}
     </tr>
     {#each weekdays as weekday, dayOfWeek}
@@ -105,6 +107,7 @@
 <style>
     .header {
         display: flex;
+        flex-direction: column;
         align-items: center;
         gap: 1em;
     }
@@ -113,5 +116,8 @@
     }
     .unexcused {
         background-color: #ff3e00;
+    }
+    .buttons {
+        display: flex;
     }
 </style>
