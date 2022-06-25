@@ -101,7 +101,7 @@
         <td class="excused"></td>
         <td>Entschuldigt</td>
         <td class="unexcused"></td>
-        <td>Untentschuldigt</td>
+        <td>Unentschuldigt</td>
     </tr>
 </table>
 <style>
