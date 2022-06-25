@@ -4,7 +4,6 @@
     import MissedDaysView from "./lib/MissedDaysView.svelte";
     import {YearData} from "./model/year-data.model";
     import {darkModeEnabled} from "./utils/stores.js";
-    import {element} from "svelte/internal";
     import {StudentModel} from "./model/student.model";
 
 
