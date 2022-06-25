@@ -21,7 +21,7 @@ $: formFilled= currentFirstName != "" && currentName != "";
 <h3>Neue Schüler:in hinzufügen</h3>
 <TextInput label="Vorname" bind:value={currentFirstName}></TextInput>
 <TextInput label="Nachname" bind:value={currentName}></TextInput>
-<ActionIcon disabled={!formFilled} on:click={()=>students = [...students,new StudentModel({name: currentName, firstName: currentFirstName})]}>
+<ActionIcon disabled={!formFilled} on:click={()=>{students.push(new StudentModel({name: currentName, firstName: currentFirstName})); students = students;}}>
     <Plus></Plus>
 </ActionIcon>
 

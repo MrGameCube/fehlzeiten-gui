@@ -6,23 +6,25 @@
     import ThemeIcon from 'svelte-material-icons/ThemeLightDark.svelte'
     import YearDataInput from "./lib/YearDataInput.svelte";
     import MissedDaysView from "./lib/MissedDaysView.svelte";
+    import {YearData} from "./model/year-data.model";
+    import {darkModeEnabled} from "./utils/stores.js";
 
 
-    let darkMode = writable(JSON.parse(localStorage.getItem("darkMode")));
-    darkMode.subscribe((value) => localStorage.setItem("darkMode", value));
 
     let displayMode: 'year-data' | 'missed-days' = 'year-data';
-
+    const yearlyData = new YearData({
+        className: ""
+    });
 </script>
-<SvelteUIProvider withGlobalStyles themeObserver={$darkMode ? 'dark' : 'light'}>
+<SvelteUIProvider withGlobalStyles themeObserver={$darkModeEnabled ? 'dark' : 'light'}>
     <main>
-        <Switch bind:checked="{$darkMode}" label="Dark Mode"></Switch>
+        <Switch bind:checked="{$darkModeEnabled}" label="Dark Mode"></Switch>
 
         {#if displayMode === "year-data"}
-            <YearDataInput></YearDataInput>
+            <YearDataInput yearData={yearlyData}></YearDataInput>
             <Button on:click={()=>displayMode='missed-days'}>Weiter zur Fehlzeitenansicht</Button>
         {:else if displayMode === "missed-days"}
-            <MissedDaysView></MissedDaysView>
+            <MissedDaysView yearlyData={yearlyData}></MissedDaysView>
             <Button on:click={()=>displayMode='year-data'}>Zurück zur Basisdatenansicht</Button>
         {/if}
     </main>

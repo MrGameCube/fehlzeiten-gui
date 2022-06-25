@@ -3,9 +3,9 @@ import {SchoolYear} from "../model/school-year.model";
 export class SchoolYearUtils {
 
     public static readonly START_DAY = 1;
-    public static readonly START_MONTH = 8;
+    public static readonly START_MONTH = 7;
     public static readonly END_DAY = 31;
-    public static readonly END_MONTH = 7;
+    public static readonly END_MONTH = 6;
 
     public static generateCurrentSchoolYear(): SchoolYear {
         const switchDate = new Date();

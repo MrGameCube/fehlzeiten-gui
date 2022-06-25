@@ -5,6 +5,6 @@ export interface MissedTime {
 }
 
 export enum MissedType {
-    EXCUSED,
-    UNEXCUSED
+    EXCUSED="Entschuldigt",
+    UNEXCUSED="Unentschuldigt"
 }

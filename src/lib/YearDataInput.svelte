@@ -5,9 +5,7 @@ import {SchoolYearUtils} from "../utils/school-year.utils.js";
 import {YearData} from "../model/year-data.model";
 import {TextInput} from "@svelteuidev/core";
 import StudentList from "./StudentList.svelte";
-let yearData = new YearData({
-    className: ""
-});
+export let yearData;
 </script>
 <SchoolYearInput currentSchoolYear={SchoolYearUtils.generateCurrentSchoolYear()}></SchoolYearInput>
 <TextInput label="Klassenname" bind:value={yearData.className}></TextInput>
