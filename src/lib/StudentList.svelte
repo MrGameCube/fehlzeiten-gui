@@ -1,13 +1,23 @@
 <script lang="ts">
 import {StudentModel} from "../model/student.model";
-import {ActionIcon, TextInput} from "@svelteuidev/core";
+import {ActionIcon, Button, TextInput} from "@svelteuidev/core";
 import Plus from 'svelte-material-icons/Plus.svelte'
 import Delete from 'svelte-material-icons/Delete.svelte'
+import {CsvUtils} from "../utils/csv-utils";
 
 export let students: StudentModel[];
 let currentFirstName = "";
 let currentName = "";
 $: formFilled= currentFirstName != "" && currentName != "";
+let csvInput: HTMLInputElement;
+const importFromCSV = async ()=> {
+    if(csvInput.files.length < 1) {
+        return;
+    }
+    const studentData = await CsvUtils.importStudents(csvInput.files[0]);
+    students.push(...studentData);
+    students = students;
+};
 </script>
 <h2>Schüler:innen</h2>
 {#each students as student, index}
@@ -24,7 +34,10 @@ $: formFilled= currentFirstName != "" && currentName != "";
 <ActionIcon disabled={!formFilled} on:click={()=>{students.push(new StudentModel({name: currentName, firstName: currentFirstName})); students = students;}}>
     <Plus></Plus>
 </ActionIcon>
-
+<input bind:this={csvInput} type="file" accept="text/csv" on:change={()=>importFromCSV()} hidden/>
+<Button on:click={()=>csvInput.click()}>
+    CSV Import
+</Button>
 <style>
 .student-entry {
     display: flex;

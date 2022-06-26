@@ -23,6 +23,7 @@
     "vite": "^2.9.9"
   },
   "dependencies": {
+    "@types/papaparse": "^5.3.2",
     "papaparse": "^5.3.2"
   }
 }

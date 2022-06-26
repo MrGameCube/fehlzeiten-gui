@@ -1,4 +1,4 @@
-import type {StudentModel} from "../model/student.model";
+import {StudentModel} from "../model/student.model";
 import Papa from 'papaparse';
 export class CsvUtils {
     public static exportToCSV(students: StudentModel[], withHours= false, withDates=false): string {
@@ -25,7 +25,17 @@ export class CsvUtils {
         });
     }
 
-    public static importStudents(): StudentModel[] {
-        return [];
+    public static async importStudents(csvFile: File): Promise<StudentModel[]> {
+        const csvText = await csvFile.text();
+        const res = Papa.parse(csvText, {header: true, skipEmptyLines: true});
+        return res.data.map((row)=> {
+            const keys = Object.keys(row);
+            const firstNameKey = keys.find((key)=>key?.toLocaleLowerCase() === "vorname");
+            const lastNameKey = keys.find((key)=>key?.toLocaleLowerCase() === "name");
+            return StudentModel.fromJSON({
+                firstName: row[firstNameKey],
+                name: row[lastNameKey]
+            });
+        });
     }
 }
