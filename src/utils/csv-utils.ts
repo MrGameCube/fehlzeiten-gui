@@ -1,5 +1,6 @@
 import {StudentModel} from "../model/student.model";
-import Papa from 'papaparse';
+import Papa, {ParseResult} from 'papaparse';
+import * as chardet from 'chardet';
 export class CsvUtils {
     public static exportToCSV(students: StudentModel[], withHours= false, withDates=false): string {
         const csvData = students.map((s)=> {
@@ -27,8 +28,21 @@ export class CsvUtils {
     }
 
     public static async importStudents(csvFile: File): Promise<StudentModel[]> {
-        const csvText = await csvFile.text();
-        const res = Papa.parse(csvText, {header: true, skipEmptyLines: true});
+        const encodingPromise = new Promise<string>((resolve)=> {
+            const fileReader = new FileReader();
+            let encoding;
+            fileReader.onload = (e)=> {
+                encoding = chardet.detect(new Uint8Array(e.target.result as ArrayBuffer));
+                resolve(encoding);
+            };
+            fileReader.readAsArrayBuffer(csvFile);
+        });
+        const encoding = await encodingPromise;
+        console.log("Encoding:",encoding);
+        const promise = new Promise<ParseResult<any>>((resolve)=> {
+            Papa.parse(csvFile as any, {header: true, encoding:encoding, skipEmptyLines: true, complete: (res)=>resolve(res)});
+        });
+        const res = await promise;
         return res.data.map((row)=> {
             const keys = Object.keys(row);
             const firstNameKey = keys.find((key)=>key?.toLocaleLowerCase() === "vorname");
