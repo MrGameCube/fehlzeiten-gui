@@ -1,4 +1,5 @@
 import type {MissedTime} from "./missed-time.model";
+import {MissedType} from "./missed-time.model";
 
 export interface StudentProperties {
     firstName: string;
@@ -45,20 +46,50 @@ export class StudentModel implements StudentProperties {
     }
 
     public getMissedDaysAndHours(): [number, number] {
-        let days = 0;
-        let hours = 0;
+        const count = this.getMissedDaysAndHoursByType();
+        let days = count.unexcusedDays + count.excusedDays;
+        let hours = count.unexcusedHours + count.excusedHours;
+        if(hours >= 6) {
+            days += 1;
+            hours -= 6;
+        }
+        return [days, hours];
+    }
+
+    public getMissedDaysAndHoursByType(): {unexcusedDays: number, unexcusedHours: number, excusedDays: number, excusedHours: number} {
+        let excusedDays = 0;
+        let unexcusedDays = 0;
+        let excusedHours = 0;
+        let unexcusedHours = 0;
         this.missedTimes.forEach((value, key)=> {
             if(value.hours === 0) {
-                days += 1;
+                if(value.type === MissedType.EXCUSED) {
+                    excusedDays += 1;
+                } else {
+                    unexcusedDays += 1;
+                }
             } else {
-                hours += value.hours;
+                if(value.type === MissedType.EXCUSED) {
+                    excusedHours += value.hours;
+                } else {
+                    unexcusedHours += value.hours;
+                }
             }
-            if(hours >= 6) {
-                days += 1;
-                hours -= 6;
+            if(unexcusedHours >= 6) {
+                unexcusedDays += 1;
+                unexcusedHours -= 6;
+            }
+            if(excusedHours >= 6) {
+                excusedDays += 1;
+                excusedHours -= 6;
             }
         });
-        return [days, hours];
+        return {
+            excusedDays,
+            excusedHours,
+            unexcusedHours,
+            unexcusedDays
+        };
     }
 
 }

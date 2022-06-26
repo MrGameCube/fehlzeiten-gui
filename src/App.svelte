@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {ActionIcon, Button, SvelteUIProvider, Switch} from "@svelteuidev/core";
+    import {ActionIcon, Button, Checkbox, SvelteUIProvider, Switch} from "@svelteuidev/core";
     import YearDataInput from "./lib/YearDataInput.svelte";
     import MissedDaysView from "./lib/MissedDaysView.svelte";
     import {YearData} from "./model/year-data.model";
@@ -9,12 +9,16 @@
     import SaveIcon from 'svelte-material-icons/ContentSave.svelte'
     import ExportIcon from 'svelte-material-icons/Export.svelte'
     import {Utils} from "./utils/utils";
+    import {CsvUtils} from "./utils/csv-utils";
 
 
     let displayMode: 'year-data' | 'missed-days' = 'year-data';
+    let exportDates = false;
+    let exportHours = false;
     const storedData = localStorage.getItem("yearlyData2022");
     let yearlyData: YearData;
     let loadInputElem: HTMLInputElement;
+
     if (storedData) {
         yearlyData = YearData.fromJSON(JSON.parse(storedData));
     } else {
@@ -53,6 +57,14 @@
       dataJSON.format = "fehlzeiten-gui";
       Utils.download(JSON.stringify(dataJSON), "fehlzeiten.json", "application/json");
     };
+
+    const exportData = ()=> {
+        const dataCSV = CsvUtils.exportToCSV(yearlyData.students, exportHours, exportDates);
+        Utils.download(dataCSV, "fehlzeiten.csv", "text/csv");
+    };
+
+
+
 </script>
 <SvelteUIProvider withGlobalStyles themeObserver={$darkModeEnabled ? 'dark' : 'light'}>
     <input bind:this={loadInputElem} type="file" class="load-input" accept="application/json" on:change={()=>onFileSelected()} hidden/>
@@ -66,10 +78,12 @@
             <SaveIcon slot="leftIcon"></SaveIcon>
             Speichern
         </Button>
-        <Button color="violet" compact="true" ripple="true">
+        <Button color="violet" compact="true" ripple="true" on:click={()=>exportData()}>
             <ExportIcon slot="leftIcon"></ExportIcon>
             Export
         </Button>
+        <Checkbox bind:checked={exportHours} label="Fehlstunden exportieren"></Checkbox>
+        <Checkbox bind:checked={exportDates} label="Fehldaten exportieren"></Checkbox>
         <Switch bind:checked="{$darkModeEnabled}" label="Dark Mode"></Switch>
     </nav>
     <main>
