@@ -3,7 +3,7 @@ import Papa from 'papaparse';
 export class CsvUtils {
     public static exportToCSV(students: StudentModel[], withHours= false, withDates=false): string {
         const csvData = students.map((s)=> {
-            const missedDays = s.getMissedDaysAndHoursByType();
+            const missedDays = s.getMissedDaysAndHoursByType(withHours);
             const data = {
                 "Vorname": s.firstName,
                 "Nachname": s.name,

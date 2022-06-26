@@ -56,7 +56,7 @@ export class StudentModel implements StudentProperties {
         return [days, hours];
     }
 
-    public getMissedDaysAndHoursByType(): {unexcusedDays: number, unexcusedHours: number, excusedDays: number, excusedHours: number} {
+    public getMissedDaysAndHoursByType(includeHours=false): {unexcusedDays: number, unexcusedHours: number, excusedDays: number, excusedHours: number} {
         let excusedDays = 0;
         let unexcusedDays = 0;
         let excusedHours = 0;
@@ -75,11 +75,11 @@ export class StudentModel implements StudentProperties {
                     unexcusedHours += value.hours;
                 }
             }
-            if(unexcusedHours >= 6) {
+            if(unexcusedHours >= 6 && includeHours) {
                 unexcusedDays += 1;
                 unexcusedHours -= 6;
             }
-            if(excusedHours >= 6) {
+            if(excusedHours >= 6 && includeHours) {
                 excusedDays += 1;
                 excusedHours -= 6;
             }
