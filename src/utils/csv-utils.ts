@@ -22,6 +22,7 @@ export class CsvUtils {
         });
         return Papa.unparse(csvData, {
             header: true,
+            delimiter: ";"
         });
     }
 
