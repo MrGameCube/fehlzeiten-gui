@@ -20,6 +20,9 @@ export class YearData implements YearDataProperties {
     }
 
     public static fromJSON(json: any): YearData {
+        if(!json) {
+            return null;
+        }
         return new YearData({
             className: json.className,
             schoolYear: SchoolYear.fromJSON(json.schoolYear),

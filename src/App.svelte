@@ -11,6 +11,7 @@
     import ExportIcon from 'svelte-material-icons/Export.svelte'
     import {Utils} from "./utils/utils";
     import {CsvUtils} from "./utils/csv-utils";
+    import {SchoolYearUtils} from "./utils/school-year.utils";
 
 
     let displayMode: 'year-data' | 'missed-days' = 'year-data';
@@ -70,9 +71,11 @@
             return;
         }
         yearlyData = new YearData({
-            className: ""
+            className: "",
         });
-        localStorage.setItem("yearlyData2022", null);
+        localStorage.removeItem("yearlyData2022");
+        // easy way to reset. a bit hacky I guess ¯\_(ツ)_/¯
+        location.reload();
     };
 
 </script>
