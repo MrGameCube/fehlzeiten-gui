@@ -77,7 +77,7 @@
 </div>
 <table>
     <tr>
-        <td></td>
+        <th></th>
         {#each yearlyData.students as student}
             <th title={student?.getMissedDaysAndHours()}>{student.name}, {student.firstName}</th>
         {/each}
@@ -91,6 +91,7 @@
                 <td on:click={()=>handleClick(student, isoDate)} on:contextmenu|preventDefault={()=>handleRightClick(student, isoDate)}
                     class:excused={missedEntry?.type===MissedType.EXCUSED}
                     class:unexcused={missedEntry?.type===MissedType.UNEXCUSED}
+                    class:dark={$darkModeEnabled}
                     class="day"
                 >{missedEntry ? missedEntry?.hours === 0 ? "" : missedEntry?.hours : ""}</td>
             {/each}
@@ -98,9 +99,9 @@
     {/each}
     <tr></tr>
     <tr>
-        <td class="excused"></td>
+        <td class="excused" class:dark={$darkModeEnabled}></td>
         <td>Entschuldigt</td>
-        <td class="unexcused"></td>
+        <td class="unexcused" class:dark={$darkModeEnabled}></td>
         <td>Unentschuldigt</td>
     </tr>
 </table>
@@ -117,7 +118,19 @@
     .unexcused {
         background-color: #ff3e00;
     }
+    .excused.dark {
+        background-color: #2408ae;
+    }
+    .unexcused.dark {
+        background-color: #bf0808;
+    }
     .buttons {
         display: flex;
+    }
+    td {
+        border: black 1px solid;
+        text-align: center;
+        height: 2.5em;
+        min-width: 3em;
     }
 </style>
