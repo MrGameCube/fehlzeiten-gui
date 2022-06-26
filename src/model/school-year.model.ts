@@ -18,5 +18,12 @@ export class SchoolYear implements SchoolYearProperties {
         Object.assign(this, properties);
     }
 
+    public static fromJSON(json: any): SchoolYear {
+        return new SchoolYear({
+            endDate: new Date(json.endDate),
+            startDate: new Date(json.startDate)
+        });
+    }
+
 
 }

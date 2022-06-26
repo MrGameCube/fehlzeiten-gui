@@ -29,11 +29,13 @@ export class StudentModel implements StudentProperties {
     }
 
     public static fromJSON(json: any): StudentModel {
+        const map = new Map<string, MissedTime>(json.missedTimes);
+        map.forEach((value, key)=>value.date = new Date(value.date));
         return new StudentModel(
             {
                 firstName: json.firstName,
                 name: json.name,
-                missedTimes: new Map<string, MissedTime>(json.missedTimes)
+                missedTimes: map
             }
         );
     }
