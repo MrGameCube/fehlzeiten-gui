@@ -7,6 +7,7 @@
     import {StudentModel} from "./model/student.model";
     import LoadIcon from 'svelte-material-icons/Upload.svelte'
     import SaveIcon from 'svelte-material-icons/ContentSave.svelte'
+    import NewIcon from 'svelte-material-icons/Note.svelte'
     import ExportIcon from 'svelte-material-icons/Export.svelte'
     import {Utils} from "./utils/utils";
     import {CsvUtils} from "./utils/csv-utils";
@@ -63,12 +64,25 @@
         Utils.download(dataCSV, "fehlzeiten.csv", "text/csv");
     };
 
-
+    const resetData = ()=> {
+        const res = confirm("Sollen die Daten wirklich zurückgesetzt werden?");
+        if(!res) {
+            return;
+        }
+        yearlyData = new YearData({
+            className: ""
+        });
+        localStorage.setItem("yearlyData2022", null);
+    };
 
 </script>
 <SvelteUIProvider withGlobalStyles themeObserver={$darkModeEnabled ? 'dark' : 'light'}>
     <input bind:this={loadInputElem} type="file" class="load-input" accept="application/json" on:change={()=>onFileSelected()} hidden/>
     <nav class="nav-bar">
+        <Button color="violet" compact="true" ripple="true" on:click={()=>resetData()}>
+            <NewIcon slot="leftIcon"></NewIcon>
+            Neu
+        </Button>
         <Button color="violet" compact="true" ripple="true" on:click={()=>onLoadClicked()}>
             <LoadIcon slot="leftIcon"></LoadIcon>
             Laden
